@@ -1,0 +1,100 @@
+Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+
+An input string is valid if:
+
+Open brackets must be closed by the same type of brackets.
+Open brackets must be closed in the correct order.
+Every close bracket has a corresponding open bracket of the same type.
+
+
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+
+// To execute C, please define "int main()"
+
+bool is_opening(char c)
+{
+  switch(c)
+  {
+    case '(':
+    case '[':
+    case '{':
+       return true;
+       break;
+    default:
+       return false;
+  }
+  return false;
+}
+
+char find_match(char c)
+{
+  char match;
+  switch(c)
+  {
+    case ')':
+      match = '(';
+    break;
+    case ']':
+      match = '[';
+    break;
+    case '}':
+      match = '{';
+    break;
+    default:
+      match = '\0';
+    break;
+  }
+  return match;
+}
+
+bool is_valid(char *s)
+{
+  int n = strlen(s);
+  char *stack = (char *) malloc(n);
+  int top = -1;
+
+  printf("String length %d \n", n);
+
+  for (int i=0;i<n;i++)
+  {
+    printf("Char[%d]: %c \n", i, s[i]);
+    if(is_opening(s[i]))
+    {
+      stack[++top] = s[i];
+      printf("Stack[%d]: %c \n", top, s[i]);
+    }
+    else {
+      if(top<0)
+        return false;
+      else
+      {
+        if(find_match(s[i]) == stack[top])
+        {
+          top--;
+          printf("Match found: %d \n", i);
+        }
+        else
+         return false;
+      }
+    }
+  }
+  if(top == -1)
+    return true;
+  else
+    return false;
+}
+
+int main() {
+  char s[] = {"{{([])}}"};
+  if(is_valid(s))
+  {
+    printf("String is valid");
+  }
+  else {
+    printf("string is invalid");
+  } 
+  return 0;
+}
