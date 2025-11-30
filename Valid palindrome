@@ -1,0 +1,56 @@
+//A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters,
+//it reads the same forward and backward. Alphanumeric characters include letters and numbers.
+
+//Given a string s, return true if it is a palindrome, or false otherwise.
+
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
+
+int valid_palindrome(char *str)
+{
+  int len = strlen(str);
+  char *clean_str = malloc((len+1) * sizeof(char));
+  
+  int i=0, j=0;
+  while(str[i] != '\0')
+  {
+    char curr = str[i];
+    if(isalnum(curr))
+    {
+      clean_str[j] = tolower(curr);
+      j++;
+    }
+    i++;
+  }
+  clean_str[j]='\0';
+
+  int left=0,right = strlen(clean_str)-1;
+   printf("Cleaned up string: %s \n left:%d, right:%d", clean_str, left, right);
+  while(left<right)
+  {
+    if(clean_str[left] != clean_str[right])
+    {
+      return 0;
+    }
+    left++;
+    right--;
+  }
+  return 1;
+}
+
+
+// To execute C, please define "int main()"
+
+int main() {
+  char string[] = "a%bcr2321cb&a";
+  if(valid_palindrome(string))
+  {
+    printf("palindrome");
+  }
+  else {
+  printf("not a palindrome");
+  }
+  return 0;
+}
