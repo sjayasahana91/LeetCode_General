@@ -1,0 +1,83 @@
+
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+typedef struct node{
+ int value;
+  struct node *next;
+}node;
+node* create_node(int data)
+{
+  
+  node *new = malloc(sizeof(node));
+  if(new)
+  {
+    new->value = data;
+    new->next = NULL;
+  }
+  return new;
+}
+
+
+int append_to_list(node** head, int value)
+{
+  node* new = create_node(value);
+
+  if(*head == NULL)
+  {
+    *head = new;
+    printf("Head node created. Head:%p \n", (void*)(*head));
+    return 1;
+  }
+  node* curr = *head;
+
+  while(curr->next)
+  {
+    curr = curr->next;
+  }
+  curr->next = new;
+  return 1;
+}
+int free_list(node** head)
+{
+  node* temp;
+  while(*head)
+  {
+    temp = *head;
+    *head = (*head)->next;
+    free(temp);
+  }
+  *head = NULL;
+  return 1;
+}
+
+int traverse_linked_list(node* head)
+{
+  if(head == NULL)
+  {
+    printf("Linked List does not exist");
+    return 0;
+  }
+  node *curr = head;
+  while(curr)
+  {
+    printf("Value:%d \n",curr->value);
+    curr = curr->next;
+  }
+  return 1;
+}
+
+int main()
+{
+  int a[5] = {10, 20, 30, 40, 50};
+
+  node* head = NULL;
+
+  append_to_list(&head, a[0]);
+  append_to_list(&head, a[1]);
+  append_to_list(&head, a[2]);
+
+  traverse_linked_list(head);
+  free_list(&head);
+  traverse_linked_list(head);
+}
