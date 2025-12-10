@@ -1,0 +1,82 @@
+/* Implement Ring/Circular buffer using static memory with service API’s to Write and Read into this buffer */
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#define BUF_SIZE  5
+
+typedef struct {
+    volatile int write_index;
+    volatile int read_index;
+    int size;
+    int *data;
+} circular_buf_t;
+
+circular_buf_t buf;
+
+void write_buffer(int inpData)
+{
+  /* critical Lock mutex*/
+  /* Put your code here */
+    int wr_idx = buf.write_index;
+  
+
+  if((wr_idx - buf.read_index)==BUF_SIZE)
+  { 
+    return;
+  }
+  int next = wr_idx%5;
+ 
+  buf.data[next] = inpData;
+  
+  buf.write_index = wr_idx+1;
+  /* critical - unlock mtx*/
+}
+
+
+int read_buffer()
+{
+  /* critical Lock mutex*/
+  /* Put your code here. */
+  int rd_idx = buf.read_index;
+  if(rd_idx == buf.write_index)
+  { 
+    return -1;
+  }
+  
+  int data = buf.data[rd_idx%5];
+  buf.read_index = rd_idx+1;
+ /* critical unlock mtx*/
+  return data; 
+}
+
+
+int  main()
+{
+  /* Put your buffer initialization here */
+  buf.data = malloc(BUF_SIZE * sizeof(int));
+  memset(buf.data, 0, sizeof(int)*5);
+  buf.write_index = 0;
+  buf.read_index = 0;
+  
+  // Test Code Do Not Change!
+  printf("Expected output:???  Read:%d\n",read_buffer());
+  write_buffer(10);
+  write_buffer(9);
+  write_buffer(8);
+  printf("Expected output:10  Read:%d\n",read_buffer());
+
+  write_buffer(15);
+  write_buffer(14);
+  write_buffer(3);
+  write_buffer(100);
+  printf("Expected output:9   Read:%d\n",read_buffer());
+  printf("Expected output:8   Read:%d\n",read_buffer());
+  printf("Expected output:15  Read:%d\n",read_buffer());
+  printf("Expected output:14  Read:%d\n",read_buffer());
+  printf("Expected output:3  Read:%d\n",read_buffer());
+  printf("Expected output:???  Read:%d\n",read_buffer());
+  
+  return 0;
+}
